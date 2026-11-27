@@ -1,14 +1,15 @@
-import { defineConfig } from "vite"
+﻿import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import path from "path"
-// Chantan Element Editor tagger (dev only) — stamps data-chantan-src on JSX
+// Chantan Element Editor tagger (dev only) â€” stamps data-chantan-src on JSX
+// @ts-expect-error The local dev-only Vite plugin is plain JavaScript without declarations.
 import chantanTagger from "./chantan-tagger.mjs"
 import pkg from "./package.json"
 
 // Pre-bundle EVERY preinstalled dependency at server boot. Without this, the
 // first import of a not-yet-optimized package (e.g. the AI adds a chart or
-// auth feature) makes Vite re-optimize deps MID-SESSION → forced full page
-// reloads, and in the bad case a stale module graph (duplicate React → white
+// auth feature) makes Vite re-optimize deps MID-SESSION â†’ forced full page
+// reloads, and in the bad case a stale module graph (duplicate React â†’ white
 // preview, or the "Outdated Optimize Dep" infinite reload loop). Node-side
 // packages that never run in the browser stay out of the list.
 const PREBUNDLE_EXCLUDE = new Set(["tailwindcss-animate"])
@@ -35,3 +36,4 @@ export default defineConfig(({ mode }) => ({
     hmr: { overlay: false },
   },
 }))
+
