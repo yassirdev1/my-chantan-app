@@ -29,3 +29,10 @@ Open the BedFlow preview and sign in with one of the demo accounts shared by the
 ## `.env.example`
 
 No local browser secrets are required for the hosted preview. The managed database connection is configured by the platform; never place a service-role key in a `VITE_*` variable.
+## Screenshots
+
+Add screenshots of the app here to showcase its interface.
+
+## Live Demo
+
+A live demo link will be added here when deployment is available.
