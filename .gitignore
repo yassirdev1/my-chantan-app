@@ -8,3 +8,4 @@ dist/
 # Supabase local dev
 supabase/.temp/
 supabase/.branches/
+.vercel
