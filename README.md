@@ -1,41 +1,86 @@
 # BedFlow
 
-BedFlow is a staff-facing hospital bed coordination workspace for a Rabat hospital. It keeps patient identifiers to anonymous codes and provides role-aware operations for administrators, doctors, nurses, and cleaning staff.
+BedFlow is a staff-facing hospital bed coordination workspace for a Rabat hospital. It helps teams coordinate departments, rooms, beds, admissions, and bed-status changes through role-aware workflows. Patient identifiers should remain anonymous codes.
 
 ## Live Demo
 
 **[Open BedFlow](https://my-chantan-app-self.vercel.app)**
 
-The demo requires an authorized account. Use demo credentials supplied by the project owner; do not enter real patient data.
+The hosted demo requires an authorized account. Request demo access from the project owner; never enter real patient information into the demo.
 
-## Current Workspace Setup
+## User Roles
 
-This project runs on its supported React + Vite + TypeScript workspace and connected managed PostgreSQL database (Supabase). It does **not** use Next.js or Prisma in this hosted workspace; the database schema and seed data are provisioned directly in the managed backend. Authentication is handled by Supabase Auth, passwords are securely hashed by the auth service, and staff roles are carried in server-granted app metadata.
+- **Administrator:** Manages departments, rooms, beds, and staff accounts.
+- **Doctor:** Uses the workspace for bed and admission coordination within assigned permissions.
+- **Nurse:** Coordinates assigned bed operations and patient-flow updates.
+- **Cleaning staff:** Receives and updates cleaning-related bed status within the assigned workflow.
 
-The initial setup creates six departments, 25 rooms, 80 beds, active anonymous demo admissions, and a status audit trail. Live bed changes are delivered through database Realtime. The `bedflow-action` server function enforces staff-role rules for assignments, discharges, status updates, and administrator CRUD.
+Access is enforced by the server-side `bedflow-action` function using the signed-in user's server-issued role. Do not grant privileges by editing client-side profile data.
 
-## Sign In
+## Tech Stack
 
-Open the live demo and sign in with one of the demo accounts shared by the project owner. Administrators can manage departments, rooms, beds, and staff accounts in Administration.
+- **Frontend:** React 18, TypeScript, Vite, Tailwind CSS
+- **UI and routing:** React Router, Radix UI, Lucide icons
+- **Backend services:** Supabase Auth, managed PostgreSQL, database Row Level Security, Realtime
+- **Server-side operations:** Supabase Edge Functions, including `bedflow-action`
+- **Build tooling:** Node.js, npm, Vite, TypeScript
 
-## Local Development
+This is a React + Vite application backed by Supabase. It does not use Next.js or Prisma in the current hosted workspace.
 
-1. Install dependencies with `npm install`.
-2. Use the configured Chantan database connection provided by the project. Do not copy service-role credentials into browser code.
-3. Run the app with `npm run dev`.
-4. The managed database schema, sample rows, and realtime publication were created during setup. Edge functions are deployed by Chantan when their source is saved.
+## Local Setup
 
-## Privacy and Operational Safety
+### Prerequisites
 
-- Store only a code such as `PAT-A12B34` in patient-code fields; never enter a name, diagnosis, or clinical note.
-- Staff roles are checked from the signed-in account's server-issued role. Do not grant access by editing a profile row.
-- Keep a separate, institution-approved patient system for clinical records. BedFlow is an operational coordination prototype and is not a substitute for hospital security, CNDP review, or a medical record system.
-- Before using real hospital operations, the hospital must review database visibility and access settings, access logs, retention, backups, and Moroccan Law 09-08/CNDP requirements.
+- Node.js and npm
+- Access to the Supabase project used by this app, or a separately configured Supabase project
 
-## Environment
+### Install and configure
 
-No local browser secrets are required for the hosted preview. The managed database connection is configured by the platform; never place a service-role key in a `VITE_*` variable.
+1. Clone the repository and enter the project folder:
 
-## Screenshots
+   ```bash
+   git clone https://github.com/yassirdev1/my-chantan-app.git
+   cd my-chantan-app
+   ```
 
-Add reviewed screenshots of the app interface here.
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Create your local environment file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env` using the values from your Supabase project settings. Never put `SUPABASE_SERVICE_ROLE_KEY` or another privileged secret in a `VITE_*` variable or commit it to Git.
+
+5. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+6. Open [http://localhost:5173](http://localhost:5173).
+
+### Production build
+
+```bash
+npm run build
+npm run preview
+```
+
+The hosted Chantan workspace has its managed database schema, sample records, and Realtime configuration provisioned separately. A fresh Supabase project needs the corresponding schema, policies, seed data, and Edge Functions deployed before all workflows will operate; do not assume that setting the two public client environment variables alone provisions the backend.
+
+## Data and Operational Safety
+
+- Use anonymous identifiers such as `PAT-A12B34`; do not enter names, diagnoses, or clinical notes.
+- Treat BedFlow as an operational coordination prototype, not a medical-record system or a replacement for an institution-approved patient system.
+- Before any real hospital deployment, obtain institutional review of access controls, database visibility, audit logs, retention, backups, and applicable Moroccan Law 09-08/CNDP requirements.
+- Never commit `.env`, service-role keys, or other credentials.
+
+## Demo Data
+
+The configured workspace was seeded with six departments, 25 rooms, 80 beds, anonymous demo admissions, and a bed-status audit trail. Live bed changes use Supabase Realtime.
